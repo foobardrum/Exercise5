@@ -131,6 +131,43 @@ void print(struct tree* t){
 	printn(p);
 
 }
+struct node* minimum(struct node* n){
+	struct node* p = n;
+	while (p->left != NIL){
+		p = p->left;
+	}
+	return p;
+}
+struct node* successor(struct tree* t, struct node* n){
+  	if( n->right != NIL )
+        return minimum(n->right);
+ 
+    struct node *succ = NIL;
+ 	struct node *p = t->root;
+ 	
+    while (p != NIL){
+        if (n->val < p->val){
+            succ = p;
+            p = p->left;
+        }
+        else if (n->val > p->val){
+            p = p->right;
+        }
+        else{
+           break;
+       }
+    }
+    return succ;	
+}
+
+struct node* ith_smallest(struct tree* t, int i){
+	struct node* p = minimum(t->root);
+	int j;
+	for(j=1; j<i; j++){
+		p = successor(t,p);
+	}
+	return p;
+}
 int main(){
 	struct tree* t = init();
 	insert(t, 4);
@@ -143,6 +180,13 @@ int main(){
 	insert(t, 12);
 	insert(t, 1);
 	print(t);
+	
+	struct node* p = t->root;
+	int i = 8;
+	
+	printf("\n\nsuccessor of %d: %d", p->val, *successor(t, p));
+	printf("\nmin: %d", *minimum(p));
+	printf("\n%dth smallest value: %d\n", i, *ith_smallest(t,i));
 	delete(t,4);
 	delete(t,7);
 	delete(t,2);
